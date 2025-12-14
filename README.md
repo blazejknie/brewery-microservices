@@ -66,6 +66,11 @@ flowchart LR
 ```text
 brewery-microservices/
 ├── README.md                # This file
+├── docs/                    # Architecture & runbooks
+│   ├── architecture.md
+│   ├── security.md
+│   └── runbook.md
+│
 ├── services/                # Git submodules
 │   ├── mssc-beer-service/
 │   ├── mssc-beer-order-service/
@@ -76,6 +81,11 @@ brewery-microservices/
 │   └── mssc-brewery-config/
 │
 ├── docker-compose.yml        # Local orchestration (optional)
+├── scripts/                 # Helper scripts
+│   ├── start-all.sh
+│   ├── stop-all.sh
+│   └── build-all.sh
+│
 └── .gitmodules               # Git submodule definitions
 ```
 
@@ -171,6 +181,112 @@ This approach enables:
 * independent deployments
 * fault isolation
 * horizontal scalability
+
+---
+
+## 🔄 Saga Pattern – Distributed Transaction Management
+
+The Brewery platform uses the **Saga Pattern** to manage **distributed business transactions** across multiple microservices without relying on two-phase commit (2PC).
+
+A saga is a sequence of **local transactions**, where each service:
+
+* performs its own operation
+* publishes an event
+* reacts to events from other services
+
+If any step fails, **compensating actions** are executed to restore consistency.
+
+---
+
+## 🧩 Saga Type Used: Choreography-Based Saga
+
+The system follows a **choreography-based saga**, meaning:
+
+* there is **no central saga orchestrator**
+* services react to events independently
+* the workflow emerges from event exchange
+
+### Why Choreography?
+
+* better loose coupling
+* no single point of failure
+* simpler scalability model
+* aligns well with event-driven architecture
+
+---
+
+## 📬 Order Processing Saga – Happy Path
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Gateway
+    participant OrderService
+    participant InventoryService
+
+    Client->>Gateway: Create Order
+    Gateway->>OrderService: POST /orders
+    OrderService->>OrderService: Create order (NEW)
+    OrderService-->>InventoryService: OrderCreated event
+    InventoryService->>InventoryService: Reserve inventory
+    InventoryService-->>OrderService: InventoryAllocated event
+    OrderService->>OrderService: Update order (ALLOCATED)
+```
+
+---
+
+## ❌ Saga Failure & Compensation Flow
+
+```mermaid
+sequenceDiagram
+    participant OrderService
+    participant InventoryService
+
+    OrderService-->>InventoryService: OrderCreated event
+    InventoryService->>InventoryService: Reserve inventory FAILED
+    InventoryService-->>OrderService: InventoryAllocationFailed event
+    OrderService->>OrderService: Update order (CANCELLED)
+```
+
+### Compensating Actions
+
+| Failed Step           | Compensation       |
+| --------------------- | ------------------ |
+| Inventory reservation | Order cancellation |
+| Partial allocation    | Inventory release  |
+
+---
+
+## 🧠 Idempotency & Reliability
+
+To ensure reliable saga execution:
+
+* events are **idempotent** (safe to reprocess)
+* services track **order state transitions**
+* message delivery is **at-least-once**
+* consumers handle duplicate events gracefully
+
+---
+
+## 🏁 Saga State Model (Order Service)
+
+| State     | Description           |
+| --------- | --------------------- |
+| NEW       | Order created         |
+| ALLOCATED | Inventory reserved    |
+| CANCELLED | Compensation executed |
+| COMPLETED | Order finalized       |
+
+---
+
+## 🎯 Benefits of Saga Pattern in This System
+
+* no distributed locks
+* no global transactions
+* resilience to partial failures
+* business-level consistency
+
+> 💡 **Key principle:** consistency is achieved eventually, not immediately.
 
 ---
 
