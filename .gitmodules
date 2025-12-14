@@ -1,0 +1,30 @@
+[submodule "services/mssc-brewery-gateway"]
+	path = services/mssc-brewery-gateway
+	url = git@github.com:blazejknie/mssc-brewery-gateway.git
+[submodule "services/mssc-brewery-eureka"]
+	path = services/mssc-brewery-eureka
+	url = git@github.com:blazejknie/mssc-brewery-eureka.git
+[submodule "services/mssc-brewery-dependencies"]
+	path = services/mssc-brewery-dependencies
+	url = git@github.com:blazejknie/mssc-brewery-dependencies.git
+[submodule "services/mssc-brewery-config-source"]
+	path = services/mssc-brewery-config-source
+	url = git@github.com:blazejknie/mssc-brewery-config-source.git
+[submodule "services/mssc-brewery-config"]
+	path = services/mssc-brewery-config
+	url = git@github.com:blazejknie/mssc-brewery-config.git
+[submodule "services/mssc-brewery-bom"]
+	path = services/mssc-brewery-bom
+	url = git@github.com:blazejknie/mssc-brewery-bom.git
+[submodule "services/mssc-beer-service"]
+	path = services/mssc-beer-service
+	url = git@github.com:blazejknie/mssc-beer-service.git
+[submodule "services/mssc-beer-order-service"]
+	path = services/mssc-beer-order-service
+	url = git@github.com:blazejknie/mssc-beer-order-service.git
+[submodule "services/mssc-beer-inventory-service"]
+	path = services/mssc-beer-inventory-service
+	url = git@github.com:blazejknie/mssc-beer-inventory-service.git
+[submodule "services/mssc-beer-inventory-failover-service"]
+	path = services/mssc-beer-inventory-failover-service
+	url = git@github.com:blazejknie/mssc-beer-inventory-failover-service.git
