@@ -66,10 +66,6 @@ flowchart LR
 ```text
 brewery-microservices/
 ├── README.md                # This file
-├── docs/                    # Architecture & runbooks
-│   ├── architecture.md
-│   ├── security.md
-│   └── runbook.md
 │
 ├── services/                # Git submodules
 │   ├── mssc-beer-service/
@@ -81,11 +77,6 @@ brewery-microservices/
 │   └── mssc-brewery-config/
 │
 ├── docker-compose.yml        # Local orchestration (optional)
-├── scripts/                 # Helper scripts
-│   ├── start-all.sh
-│   ├── stop-all.sh
-│   └── build-all.sh
-│
 └── .gitmodules               # Git submodule definitions
 ```
 
